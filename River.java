@@ -147,8 +147,7 @@ public class River
 		Animal temp = river[i];
 		river[i] = null; //sets original position to null
 		if(temp == null)
-		{
-		}
+		{}
 		else if(k == 0){ //don't move
 			river[i] = temp;
 		}
@@ -181,79 +180,75 @@ public class River
 								river[i-1] = temp;
 							}
 						}
-						
-						else //create new bear and move no where
-						{
+
+						//create new bear at destination
+						else{
 							addRandom(new Bear());
 							river[i] = temp;
 						}
 					}
 					else{}
 				}
-				
-				else //at beginning of river
-				{
-					if(river[length - 1] == null)//if empty, just go
-					{
+
+				//at beginning of river
+				else{
+					if(river[length - 1] == null){//if empty
 						river[length - 1] = temp;
 					}
 					
-					else if(river[length - 1].toString().charAt(0) == 'F')//fish dies regardless
-					{
+					else if(river[length - 1].toString().charAt(0) == 'F'){//fish dies regardless
 						river[length - 1] = temp;
 					}
 					
-					else if(river[length-1].toString().charAt(0) == 'B') //if bear
-					{
-						if(river[length-1].gender == temp.gender)//same gender
-						{
-							if(((Bear)river[length-1]).getStrength() == ((Bear)temp).getStrength())//same gender and strength
-							{
-								river[i] = temp; //do nothing
+					//if bear
+					else if(river[length-1].toString().charAt(0) == 'B'){
+						//same gender
+						if(river[length-1].gender == temp.gender){
+							//same gender and strength
+							if(((Bear)river[length-1]).getStrength() == ((Bear)temp).getStrength()){
+								//nothing happens
+								river[i] = temp; 
+							}
+
+							else if(((Bear)river[length-1]).getStrength() >= ((Bear)temp).getStrength()){
+								//same gender and strength
+								//Bear dies, one is stronger than the other
 							}
 							
-							else if(((Bear)river[length-1]).getStrength() >= ((Bear)temp).getStrength())//same gender and strength
-							{
-								//Bear dies because not as strong
-							}
-							
-							else
-							{
+							else{
 								river[length-1] = temp;
 							}
 						}
 						
-						else //create new bear and move no where
-						{
+						//create new bear and move no where
+						else{
 							addRandom(new Bear());
 							river[i] = temp;
 						}
 					}
 					
-					else
-					{
-					}
+					else{}
 				}
 			}
 			
-			else //move right
-			{
-				if(i+1 <= length - 1) //not at end of river
-				{
-					if(river[i+1] == null)//if empty, just go
-					{
+			else{ //move right
+				
+				//not at end of river
+				if(i+1 <= length - 1){
+
+					//if empty, move on
+					if(river[i+1] == null){
 						river[i+1] = temp;
 					}
 					
-					else if(river[i+1].toString().charAt(0) == 'F')//fish dies regardless
-					{
+					else if(river[i+1].toString().charAt(0) == 'F'){//fish dies regardless
 						river[i+1] = temp;
 					}
 					
-					else if(river[i+1].toString().charAt(0) == 'B') //if bear
-					{
-						if(river[i+1].gender == temp.gender)//same gender
-						{
+					else if(river[i+1].toString().charAt(0) == 'B'){//if bear
+						
+						//same gender
+						if(river[i+1].gender == temp.gender){
 							if(((Bear)river[i+1]).getStrength() == ((Bear)temp).getStrength())//same gender and strength
 							{
 								river[i] = temp; //do nothing
