@@ -35,7 +35,7 @@ public class River
 		}
 	}
 	
-	//constructs a river from a file, otherwise throws an exception
+	//constructs a river from a file, otherwise throws a FileNotFoundException
 	public River(String inputFileName) throws FileNotFoundException{
 		try{
 			File f = new File(inputFileName);
@@ -54,28 +54,30 @@ public class River
 			for(int i=0; i<x.size(); i++){
 				if(x.get(i).equals("---")) river[i] = null;
 			
-				else if(x.get(i).charAt(0) == 'F')//fish
-				{
-					if(x.get(i).charAt(1) == 'F')//female
-					{
+				//fish
+				else if(x.get(i).charAt(0) == 'F'){
+
+					//female
+					if(x.get(i).charAt(1) == 'F'){
 						river[i] = new Fish((Integer.parseInt(""+x.get(i).charAt(2))), Gender.FEMALE);
 					}
-				
-					else //male
-					{
+					
+					//male
+					else{
 						river[i] = new Fish((Integer.parseInt(""+x.get(i).charAt(2))), Gender.MALE);
 					}
 				}	
 			
-				else //bear
-				{
-					if(x.get(i).charAt(1) == 'F')//female
-					{
+				//bear
+				else{
+
+					//female
+					if(x.get(i).charAt(1) == 'F'){
 						river[i] = new Bear((Integer.parseInt(""+x.get(i).charAt(2))), Gender.FEMALE);
 					}
 				
-					else //male
-					{
+					//male
+					else{ 
 						river[i] = new Bear((Integer.parseInt(""+x.get(i).charAt(2))), Gender.MALE);
 					}
 				}
@@ -120,8 +122,10 @@ public class River
 		return count;
 	}
 
-	//if the river has no empty cells, do nothing and return false
-	//else, add an animal whose age is 0
+	/*
+	if the river has no empty cells, do nothing and return false
+	else, add an animal whose age is 0
+	*/
 	public boolean addRandom(Animal animal){
 		animal.age = 0;
 		for(int i=0; i<river.length; i++){
@@ -134,10 +138,12 @@ public class River
 		return false;
 	}
 
-	//if null do nothing.
-	//if it is an animal and it has reached the end of its lifespan, animal dies
-	//else, it decides which direction, if any, the animal should move and what
-	//actions to take
+	/*
+	if null do nothing.
+	if it is an animal and it has reached the end of its lifespan, animal dies
+	else, it decides which direction, if any, the animal should move and what
+	actions to take
+	*/
 	public void updateCell(int i) 
 	{
 		int k = RandomSingleton.getInstance().nextInt(3);
@@ -156,22 +162,28 @@ public class River
 		else if(temp.toString().charAt(0) == 'B'){ 
 			if(k == 1){ //move left
 				if(i-1 >= 0){ //not at beginning of river
+
 					if(river[i-1] == null){
 						river[i-1] = temp;
 					}
+					
 					//bear eats fish
 					else if(river[i-1].toString().charAt(0) == 'F'){
 						river[i-1] = temp;
 					}
+					
 					//if bear
 					else if(river[i-1].toString().charAt(0) == 'B'){
+						
 						//same gender means fight
-						if(river[i-1].gender == temp.gender)
-						{
-							//same gender and same strength, do nothing
+						if(river[i-1].gender == temp.gender){
+						
+							//same gender and same strength
 							if(((Bear)river[i-1]).getStrength() == ((Bear)temp).getStrength()){
+								//draw
 								river[i] = temp;
 							}
+
 							//same gender and different strength, one bear loses
 							else if(((Bear)river[i-1]).getStrength() >= ((Bear)temp).getStrength()){
 							}
@@ -196,16 +208,20 @@ public class River
 						river[length - 1] = temp;
 					}
 					
-					else if(river[length - 1].toString().charAt(0) == 'F'){//fish dies regardless
+					//fish dies
+					else if(river[length - 1].toString().charAt(0) == 'F'){
 						river[length - 1] = temp;
 					}
 					
 					//if bear
 					else if(river[length-1].toString().charAt(0) == 'B'){
+						
 						//same gender
 						if(river[length-1].gender == temp.gender){
+							
 							//same gender and strength
 							if(((Bear)river[length-1]).getStrength() == ((Bear)temp).getStrength()){
+								
 								//nothing happens
 								river[i] = temp; 
 							}
@@ -231,118 +247,121 @@ public class River
 				}
 			}
 			
-			else{ //move right
+			//move right
+			else{ 
 				
 				//not at end of river
 				if(i+1 <= length - 1){
 
-					//if empty, move on
+					//if empty
 					if(river[i+1] == null){
 						river[i+1] = temp;
 					}
 					
-					else if(river[i+1].toString().charAt(0) == 'F'){//fish dies regardless
+					//fish dies regardless
+					else if(river[i+1].toString().charAt(0) == 'F'){
 						river[i+1] = temp;
 					}
 					
-					else if(river[i+1].toString().charAt(0) == 'B'){//if bear
+					//if bear
+					else if(river[i+1].toString().charAt(0) == 'B'){
 						
 						//same gender
 						if(river[i+1].gender == temp.gender){
-							if(((Bear)river[i+1]).getStrength() == ((Bear)temp).getStrength())//same gender and strength
-							{
-								river[i] = temp; //do nothing
+
+							//same gender and strength
+							if(((Bear)river[i+1]).getStrength() == ((Bear)temp).getStrength()){
+								river[i] = temp; //draw
 							}
 							
-							else if(((Bear)river[i+1]).getStrength() >= ((Bear)temp).getStrength())//same gender and strength
-							{
+							//same gender and higher strength
+							else if(((Bear)river[i+1]).getStrength() >= ((Bear)temp).getStrength()){
 								//Bear dies because not as strong
 							}
 							
-							else
-							{
+							else{
 								river[i+1] = temp;
 							}
 						}
 						
-						else //create new bear and move no where
-						{
+						//create new bear and move no where
+						else{
 							addRandom(new Bear());
 							river[i] = temp;
 						}
 					}
 					
-					else
-					{
-					}
+					else{}
 				}
 				
-				else //at end of river
-				{
-					if(river[0] == null)//if empty, just go
-					{
+				//at end of river
+				else {
+					
+					//if empty
+					if(river[0] == null){
 						river[0] = temp;
 					}
 					
-					else if(river[0].toString().charAt(0) == 'F')//fish dies regardless
-					{
+					//fish dies
+					else if(river[0].toString().charAt(0) == 'F'){
 						river[0] = temp;
 					}
 					
-					else if(river[0].toString().charAt(0) == 'B') //if bear
-					{
-						if(river[0].gender == temp.gender)//same gender
-						{
-							if(((Bear)river[0]).getStrength() == ((Bear)temp).getStrength())//same gender and strength
-							{
-								river[i] = temp; //do nothing
+					//if bear
+					else if(river[0].toString().charAt(0) == 'B'){
+						
+						//same gender
+						if(river[0].gender == temp.gender){
+
+							//same gender and strength
+							if(((Bear)river[0]).getStrength() == ((Bear)temp).getStrength()){
+								river[i] = temp; //draw
 							}
 							
-							else if(((Bear)river[0]).getStrength() >= ((Bear)temp).getStrength())//same gender and strength
-							{
-								//Bear dies because not as strong
+							//bear dies because not as strong
+							else if(((Bear)river[0]).getStrength() >= ((Bear)temp).getStrength()){
 							}
 							
-							else
-							{
+							else{
 								river[0] = temp;
 							}
 						}
 						
-						else //create new bear and move no where
-						{
+						//create new bear and move no where
+						else{
 							addRandom(new Bear());
 							river[i] = temp;
 						}
 					}
 					
-					else
-					{
-					}
+					else{}
 				}
 			}
 		}
 			
-		else //fish
-		{
-			if(k == 1) //move left
-			{
-				if(i-1 >= 0) //if not at beginning of river
-				{
-					if(river[i-1] == null)//if empty, just go
-					{
+		//fish	
+		else{
+			
+			//move left
+			if(k == 1){
+				
+				//if not at beginning of river
+				if(i-1 >= 0){
+					
+					//if empty
+					if(river[i-1] == null){
 						river[i-1] = temp;
 					}
 					
-					else if(river[i-1].toString().charAt(0) == 'B')//fish dies regardless
-					{
+					//fish dies 
+					else if(river[i-1].toString().charAt(0) == 'B'){
 					}
 					
 					else if(river[i-1].toString().charAt(0) == 'F') //if fish
 					{
 						if(river[i-1].gender == temp.gender)//same gender
 						{
-							river[i] = temp; //do nothing
+							river[i] = temp; //draw
 						}
 						
 						else //create new fish and move no where
@@ -359,7 +378,7 @@ public class River
 				
 				else //at beginning of river
 				{
-					if(river[length - 1] == null)//if empty, just go
+					if(river[length - 1] == null)//if empty
 					{
 						river[length - 1] = temp;
 					}
@@ -392,7 +411,7 @@ public class River
 			{
 				if(i+1 <= length - 1) //if not at end of river
 				{
-					if(river[i+1] == null)//if empty, just go
+					if(river[i+1] == null)//if empty
 					{
 						river[i+1] = temp;
 					}
@@ -422,7 +441,7 @@ public class River
 				
 				else //at end of river
 				{
-					if(river[0] == null)//if empty, just go
+					if(river[0] == null)//if empty
 					{
 						river[0] = temp;
 					}
